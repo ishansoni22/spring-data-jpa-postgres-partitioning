@@ -1,4 +1,4 @@
-package com.ishan.postgrespartitioning.port.adapter.setup;
+package com.ishan.postgrespartitioning.port.adapter.http;
 
 import com.ishan.postgrespartitioning.domain.UnPartitionedOrder;
 import com.ishan.postgrespartitioning.domain.UnPartitionedOrdersJpaRepository;

@@ -1,10 +1,10 @@
-package com.ishan.postgrespartitioning.port.adapter.setup;
+package com.ishan.postgrespartitioning.port.adapter.http;
 
 import com.ishan.postgrespartitioning.application.OrderApplicationService;
 import com.ishan.postgrespartitioning.application.OrderCommand;
 import com.ishan.postgrespartitioning.domain.Order;
+import com.ishan.postgrespartitioning.domain.Order.ArchiveStatus;
 import com.ishan.postgrespartitioning.domain.Order.OrderAction;
-import com.ishan.postgrespartitioning.domain.OrderId;
 import com.ishan.postgrespartitioning.domain.OrdersJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,8 +28,8 @@ public class OrderController {
 
   @GetMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Order> getOrder(@PathVariable("orderId") String orderId) {
-    return ordersJpaRepository.findById(
-        new OrderId(orderId)
+    return ordersJpaRepository.findByOrderIdAndArchiveStatus(
+        orderId, ArchiveStatus.ACTIVE
     ).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 

@@ -1,8 +1,7 @@
 package com.ishan.postgrespartitioning.port.adapter.setup;
 
 import com.ishan.postgrespartitioning.domain.Order;
-import com.ishan.postgrespartitioning.domain.OrderId;
-import com.ishan.postgrespartitioning.domain.OrderId.ArchiveStatus;
+import com.ishan.postgrespartitioning.domain.Order.ArchiveStatus;
 import com.ishan.postgrespartitioning.domain.OrderStatus;
 import com.ishan.postgrespartitioning.domain.OrdersJpaRepository;
 import com.ishan.postgrespartitioning.domain.UnPartitionedOrder;
@@ -32,7 +31,7 @@ public class SetupMockOrders {
   @Transactional
   public void setUp() {
 
-    int total = 10_000_000;
+    int total = 100_000;
     int batchSize = 1000;
     int batch = 1;
 
@@ -47,21 +46,20 @@ public class SetupMockOrders {
 
       double randomDouble = random.nextDouble();
       OrderStatus status = OrderStatus.CREATED;
+      ArchiveStatus archiveStatus = ArchiveStatus.ACTIVE;
       //You'll have much more archived orders than active orders
-      if (randomDouble < 0.9) {
+      if (randomDouble < 0.95) {
         status = OrderStatus.DELIVERED;
+        archiveStatus = ArchiveStatus.ARCHIVED;
       }
 
       Double orderTotal = random.nextDouble() * 1000;
 
       Order order = new Order();
-      if (status.equals(OrderStatus.DELIVERED)) {
-        order.setId(new OrderId(orderId, ArchiveStatus.ARCHIVED));
-      } else {
-        order.setId(new OrderId(orderId));
-      }
+      order.setOrderId(orderId);
       order.setUserId(userId);
       order.setStatus(status);
+      order.setArchiveStatus(archiveStatus);
       order.setTotal(BigDecimal.valueOf(orderTotal));
 
       orders.add(order);
