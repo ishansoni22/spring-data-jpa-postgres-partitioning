@@ -1,12 +1,11 @@
-package com.ishan.postgrespartitioning.port.adapter.setup;
+package com.ishan.postgrespartitioning.port.adapter.setup.orders;
 
-import com.ishan.postgrespartitioning.domain.Order;
-import com.ishan.postgrespartitioning.domain.OrderId;
-import com.ishan.postgrespartitioning.domain.OrderId.ArchiveStatus;
-import com.ishan.postgrespartitioning.domain.OrderStatus;
-import com.ishan.postgrespartitioning.domain.OrdersJpaRepository;
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrder;
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrdersJpaRepository;
+import com.ishan.postgrespartitioning.domain.orders.Order;
+import com.ishan.postgrespartitioning.domain.orders.Order.ArchiveStatus;
+import com.ishan.postgrespartitioning.domain.orders.OrderStatus;
+import com.ishan.postgrespartitioning.domain.orders.OrdersJpaRepository;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrder;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrdersJpaRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,8 @@ public class SetupMockOrders {
   @Transactional
   public void setUp() {
 
-    int total = 10_000_000;
-    int batchSize = 1000;
+    int total = 10_000;
+    int batchSize = 100;
     int batch = 1;
 
     List<Order> orders = new ArrayList<>();
@@ -47,21 +46,20 @@ public class SetupMockOrders {
 
       double randomDouble = random.nextDouble();
       OrderStatus status = OrderStatus.CREATED;
+      ArchiveStatus archiveStatus = ArchiveStatus.ACTIVE;
       //You'll have much more archived orders than active orders
       if (randomDouble < 0.9) {
         status = OrderStatus.DELIVERED;
+        archiveStatus = ArchiveStatus.ARCHIVED;
       }
 
       Double orderTotal = random.nextDouble() * 1000;
 
       Order order = new Order();
-      if (status.equals(OrderStatus.DELIVERED)) {
-        order.setId(new OrderId(orderId, ArchiveStatus.ARCHIVED));
-      } else {
-        order.setId(new OrderId(orderId));
-      }
+      order.setOrderId(orderId);
       order.setUserId(userId);
       order.setStatus(status);
+      order.setArchiveStatus(archiveStatus);
       order.setTotal(BigDecimal.valueOf(orderTotal));
 
       orders.add(order);
@@ -75,7 +73,7 @@ public class SetupMockOrders {
       unPartitionedOrders.add(unPartitionedOrder);
 
       if (i % batchSize == 0) {
-        log.info("Processing batch " + batch
+        log.info("Processing orders batch " + batch
             + ". Progress = " +  ((batch * batchSize) / (double) total) * 100.0d + " %");
         ordersJpaRepository.saveAll(orders);
         unPartitionedOrdersJpaRepository.saveAll(unPartitionedOrders);

@@ -1,10 +1,10 @@
-package com.ishan.postgrespartitioning.domain;
+package com.ishan.postgrespartitioning.domain.orders;
 
 import java.math.BigDecimal;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +20,12 @@ public class Order {
     SHIPPED, DELIVERED;
   }
 
-  @EmbeddedId
-  private OrderId id;
+  public enum ArchiveStatus {
+    ACTIVE, ARCHIVED;
+  }
+
+  @Id
+  private String orderId;
 
   private String userId;
 
@@ -30,28 +34,19 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
-  public Order performAction(OrderAction action) {
+  @Enumerated(EnumType.STRING)
+  private ArchiveStatus archiveStatus;
+
+  public void performAction(OrderAction action) {
     if (OrderAction.SHIPPED.equals(action)) {
       this.status = OrderStatus.SHIPPED;
     } else if (OrderAction.DELIVERED.equals(action)) {
       this.status = OrderStatus.DELIVERED;
-
-      //Todo
-
-      // Doesn't work - org.hibernate.HibernateException: identifier of an instance of
-      // com.ishan.postgrespartitioning.domain.Order was altered from
-      // com.ishan.postgrespartitioning.domain.OrderId@7e2222ed to
-      // com.ishan.postgrespartitioning.domain.OrderId@3ec65042
-      // this.id = new OrderId(this.id.getId(), ArchiveStatus.ARCHIVED);
-
-      // Doesn't work - org.hibernate.StaleStateException:
-      // Batch update returned unexpected row count from update [0]; actual row count: 0; expected: 1
-      this.id.markArchived();
+      this.archiveStatus = ArchiveStatus.ARCHIVED;
 
     } else {
       //Throw Exception
     }
-    return this;
   }
 
 }

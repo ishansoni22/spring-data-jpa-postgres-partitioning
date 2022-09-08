@@ -1,7 +1,7 @@
-package com.ishan.postgrespartitioning.port.adapter.setup;
+package com.ishan.postgrespartitioning.port.adapter.http.orders;
 
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrder;
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrdersJpaRepository;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrder;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrdersJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
