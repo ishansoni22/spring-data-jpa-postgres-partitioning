@@ -1,6 +1,6 @@
-package com.ishan.postgrespartitioning.domain;
+package com.ishan.postgrespartitioning.domain.orders;
 
-import com.ishan.postgrespartitioning.domain.Order.ArchiveStatus;
+import com.ishan.postgrespartitioning.domain.orders.Order.ArchiveStatus;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

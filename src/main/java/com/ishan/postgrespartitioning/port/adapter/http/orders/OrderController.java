@@ -1,11 +1,11 @@
-package com.ishan.postgrespartitioning.port.adapter.http;
+package com.ishan.postgrespartitioning.port.adapter.http.orders;
 
-import com.ishan.postgrespartitioning.application.OrderApplicationService;
-import com.ishan.postgrespartitioning.application.OrderCommand;
-import com.ishan.postgrespartitioning.domain.Order;
-import com.ishan.postgrespartitioning.domain.Order.ArchiveStatus;
-import com.ishan.postgrespartitioning.domain.Order.OrderAction;
-import com.ishan.postgrespartitioning.domain.OrdersJpaRepository;
+import com.ishan.postgrespartitioning.application.orders.OrderApplicationService;
+import com.ishan.postgrespartitioning.application.orders.PerformActionOnOrderCommand;
+import com.ishan.postgrespartitioning.domain.orders.Order;
+import com.ishan.postgrespartitioning.domain.orders.Order.ArchiveStatus;
+import com.ishan.postgrespartitioning.domain.orders.Order.OrderAction;
+import com.ishan.postgrespartitioning.domain.orders.OrdersJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class OrderController {
       @PathVariable("orderId") String orderId,
       @RequestBody String action) {
     return ResponseEntity.ok(orderApplicationService
-        .performActionOnOrder(new OrderCommand(orderId, OrderAction.valueOf(action))));
+        .performActionOnOrder(new PerformActionOnOrderCommand(orderId, OrderAction.valueOf(action))));
   }
 
 }

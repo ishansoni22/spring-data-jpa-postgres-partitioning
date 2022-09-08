@@ -1,11 +1,11 @@
-package com.ishan.postgrespartitioning.port.adapter.setup;
+package com.ishan.postgrespartitioning.port.adapter.setup.orders;
 
-import com.ishan.postgrespartitioning.domain.Order;
-import com.ishan.postgrespartitioning.domain.Order.ArchiveStatus;
-import com.ishan.postgrespartitioning.domain.OrderStatus;
-import com.ishan.postgrespartitioning.domain.OrdersJpaRepository;
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrder;
-import com.ishan.postgrespartitioning.domain.UnPartitionedOrdersJpaRepository;
+import com.ishan.postgrespartitioning.domain.orders.Order;
+import com.ishan.postgrespartitioning.domain.orders.Order.ArchiveStatus;
+import com.ishan.postgrespartitioning.domain.orders.OrderStatus;
+import com.ishan.postgrespartitioning.domain.orders.OrdersJpaRepository;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrder;
+import com.ishan.postgrespartitioning.domain.orders.UnPartitionedOrdersJpaRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class SetupMockOrders {
   @Transactional
   public void setUp() {
 
-    int total = 100_000;
-    int batchSize = 1000;
+    int total = 10_000;
+    int batchSize = 100;
     int batch = 1;
 
     List<Order> orders = new ArrayList<>();
@@ -48,7 +48,7 @@ public class SetupMockOrders {
       OrderStatus status = OrderStatus.CREATED;
       ArchiveStatus archiveStatus = ArchiveStatus.ACTIVE;
       //You'll have much more archived orders than active orders
-      if (randomDouble < 0.95) {
+      if (randomDouble < 0.9) {
         status = OrderStatus.DELIVERED;
         archiveStatus = ArchiveStatus.ARCHIVED;
       }
@@ -73,7 +73,7 @@ public class SetupMockOrders {
       unPartitionedOrders.add(unPartitionedOrder);
 
       if (i % batchSize == 0) {
-        log.info("Processing batch " + batch
+        log.info("Processing orders batch " + batch
             + ". Progress = " +  ((batch * batchSize) / (double) total) * 100.0d + " %");
         ordersJpaRepository.saveAll(orders);
         unPartitionedOrdersJpaRepository.saveAll(unPartitionedOrders);

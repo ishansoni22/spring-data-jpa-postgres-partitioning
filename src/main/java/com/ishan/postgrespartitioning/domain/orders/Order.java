@@ -1,4 +1,4 @@
-package com.ishan.postgrespartitioning.domain;
+package com.ishan.postgrespartitioning.domain.orders;
 
 import java.math.BigDecimal;
 import javax.persistence.Entity;
