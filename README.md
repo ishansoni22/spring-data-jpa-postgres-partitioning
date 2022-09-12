@@ -26,8 +26,8 @@ It'll also be easy to drop entire partitions using this approach when they becom
 
 > Important points to note:
 
-1. If you have explicitly defined a primary key, your parition key should either be that primary key or a part of it.
+1. If you have explicitly defined a primary key, your partition key should either be that primary key or a part of it.
 2. In these examples, I do not have any primary key for the partitioned tables.
 3. Constraints won't work as a whole for a partitioned table. It starts to behave like a NoSQL store. You can however create constraints for a particular partitioned table, but these constraints will only work for that partition. 
 4. JPA requires each entity to have a primary key. If your table does not have a primary key, mark any business key that can serve as the primary key with @Id. Make sure to index that key.
-5. With spring-data-jpa query methods, you cannot update the primary key of an entity. If your partition key is part of the primary key, you won't be able to update the partiton key unless you use native queries.
+5. With spring-data-jpa query methods, you cannot update the primary key of an entity. If your partition key is part of the primary key, you won't be able to update the partition key unless you use native queries.
